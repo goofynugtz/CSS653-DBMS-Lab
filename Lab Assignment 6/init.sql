@@ -3,9 +3,21 @@ DROP DATABASE assignment_6;
 CREATE DATABASE assignment_6;
 USE assignment_6;
 
-CREATE TABLE accounts(AccountNo int PRIMARY KEY, AccountHolder varchar(50), balance double);
+CREATE TABLE accounts(
+  AccountNo int PRIMARY KEY, 
+  AccountHolder varchar(50), 
+  balance double
+);
 
-CREATE TABLE transactions(TransactionId int PRIMARY KEY NOT NULL AUTO_INCREMENT, FromAccount int, FOREIGN KEY (FromAccount) REFERENCES accounts(AccountNo), ToAccount int, FOREIGN KEY (ToAccount) REFERENCES accounts(AccountNo), Amount double, TransactionDate date DEFAULT (CURRENT_DATE));
+CREATE TABLE transactions(
+  TransactionId int PRIMARY KEY NOT NULL AUTO_INCREMENT, 
+  FromAccount int, 
+  FOREIGN KEY (FromAccount) REFERENCES accounts(AccountNo), 
+  ToAccount int, 
+  FOREIGN KEY (ToAccount) REFERENCES accounts(AccountNo), 
+  Amount double, 
+  TransactionDate date DEFAULT (CURRENT_DATE)
+);
 
 ALTER TABLE transactions AUTO_INCREMENT = 2990;
 

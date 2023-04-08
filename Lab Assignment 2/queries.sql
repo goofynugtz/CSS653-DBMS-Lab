@@ -1,4 +1,5 @@
--- 1. Find all the students’ name, city, course allotted from the CSE department.
+-- 1. Find all the students’ name, city, course allotted 
+-- from the CSE department.
 SELECT * 
 FROM student s
 JOIN programme p

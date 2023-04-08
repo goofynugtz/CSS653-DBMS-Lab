@@ -20,4 +20,4 @@ END while;
 END //  
 
 call Fib();
-SELECT * from fibonacci
+SELECT * from fibonacci;

@@ -3,12 +3,22 @@ DROP DATABASE assignment_2;
 CREATE DATABASE assignment_2;
 USE assignment_2;
 
-CREATE TABLE dept(DeptCode varchar(5) PRIMARY KEY, DeptName varchar(50) UNIQUE, HOD varchar(5));
+CREATE TABLE dept(
+  DeptCode varchar(5) PRIMARY KEY, 
+  DeptName varchar(50) UNIQUE, 
+  HOD varchar(5)
+);
 
 INSERT INTO dept VALUES ('CSE', 'Computer Science and Engineering', '');
 INSERT INTO dept VALUES ('EE', 'Electrical Engineering', '');
 
-CREATE TABLE programme(Name varchar(25) PRIMARY KEY, Duration int, ProgrammeCode varchar(7) UNIQUE, DeptCode varchar(5), FOREIGN KEY (DeptCode) REFERENCES dept(DeptCode));
+CREATE TABLE programme(
+  Name varchar(25) PRIMARY KEY, 
+  Duration int, 
+  ProgrammeCode varchar(7) UNIQUE, 
+  DeptCode varchar(5), 
+  FOREIGN KEY (DeptCode) REFERENCES dept(DeptCode)
+);
 
 INSERT INTO programme VALUES ('B.Tech CSE', 4, 'CSE_UG', 'CSE');
 INSERT INTO programme VALUES ('M.Tech CSE', 2, 'CSE_PG', 'CSE');
@@ -18,8 +28,14 @@ INSERT INTO programme VALUES ('M.Tech EE', 2, 'EE_PG', 'EE');
 INSERT INTO programme VALUES ('PhD EE', 1, 'EE_PhD', 'EE');
 
 
-CREATE TABLE student(RollNo varchar(8) PRIMARY KEY, Name varchar(25), Address varchar(100), Semester int, Programme varchar(7), FOREIGN KEY (Programme) REFERENCES programme(ProgrammeCode));
-
+CREATE TABLE student(
+  RollNo varchar(8) PRIMARY KEY, 
+  Name varchar(25), 
+  Address varchar(100), 
+  Semester int, 
+  Programme varchar(7), 
+  FOREIGN KEY (Programme) REFERENCES programme(ProgrammeCode)
+);
 
 INSERT INTO student VALUES ('20CS8001', 'Ryan Howard', 'West Bengal', 4, 'CSE_UG');
 INSERT INTO student VALUES ('20CS8002', 'Jaelynn Le', 'Assam', 4, 'CSE_UG');
@@ -49,8 +65,17 @@ INSERT INTO student VALUES ('20EE6001', 'Theresa Dorsey', 'Madhya Pradesh', 4, '
 INSERT INTO student VALUES ('20EE6002', 'Stacy Cuevas', 'Arunachal Pradesh', 4, 'EE_PhD');
 
 
-CREATE TABLE courses(CourseID varchar(6) PRIMARY KEY, Title varchar(50), Credit int, Type varchar(8), OfferringDept varchar(5), FOREIGN KEY (OfferringDept) REFERENCES dept(DeptCode), ProgrammeCode varchar(6), FOREIGN KEY (ProgrammeCode) REFERENCES programme(ProgrammeCode));
-ALTER TABLE courses ADD CONSTRAINT check_type CHECK (Type in ("Core", "Elective"));
+CREATE TABLE courses(
+  CourseID varchar(6) PRIMARY KEY, 
+  Title varchar(50), 
+  Credit int, Type varchar(8), 
+  OfferringDept varchar(5), 
+  FOREIGN KEY (OfferringDept) REFERENCES dept(DeptCode), 
+  ProgrammeCode varchar(6), 
+  FOREIGN KEY (ProgrammeCode) REFERENCES programme(ProgrammeCode)
+);
+ALTER TABLE courses ADD CONSTRAINT 
+check_type CHECK (Type in ("Core", "Elective"));
 
 INSERT INTO courses VALUES ('CSC401', 'Computer Organization and Architecture', 4, 'Core', 'CSE', 'CSE_UG');
 INSERT INTO courses VALUES ('CSC402', 'Theory of Computation', 3, 'Core', 'CSE', 'CSE_UG');
@@ -62,7 +87,14 @@ INSERT INTO courses VALUES ('ECS402', 'Electrical Machines - I', 4, 'Core', 'EE'
 INSERT INTO courses VALUES ('ECS501', 'Electrical Machines - II', 4, 'Core', 'EE', 'EE_UG');
 INSERT INTO courses VALUES ('ECS502', 'Control Systems', 4, 'Core', 'EE', 'EE_UG');
 
-CREATE TABLE student_course(RollNo varchar(8), FOREIGN KEY (RollNo) REFERENCES student(RollNo), CourseID varchar(6), FOREIGN KEY (CourseID) REFERENCES courses(CourseID), PRIMARY KEY(RollNo, CourseID), Semester int);
+CREATE TABLE student_course(
+  RollNo varchar(8), 
+  FOREIGN KEY (RollNo) REFERENCES student(RollNo), 
+  CourseID varchar(6), 
+  FOREIGN KEY (CourseID) REFERENCES courses(CourseID), 
+  PRIMARY KEY(RollNo, CourseID), 
+  Semester int
+);
 
 INSERT INTO student_course VALUES ('20CS8001', 'CSC401', 4);
 INSERT INTO student_course VALUES ('20CS8001', 'CSC402', 4);
@@ -81,7 +113,13 @@ INSERT INTO student_course VALUES ('19CS8003', 'CSC502', 5);
 INSERT INTO student_course VALUES ('19CS8004', 'CSC501', 5);
 INSERT INTO student_course VALUES ('19CS8004', 'CSC502', 5);
 
-CREATE TABLE teacher(EmpCode varchar(4) PRIMARY KEY, EmpName varchar(25), Department varchar(5), FOREIGN KEY (Department) REFERENCES dept(DeptCode), Designation varchar(25));
+CREATE TABLE teacher(
+  EmpCode varchar(4) PRIMARY KEY, 
+  EmpName varchar(25), 
+  Department varchar(5), 
+  FOREIGN KEY (Department) REFERENCES dept(DeptCode), 
+  Designation varchar(25)
+);
 
 INSERT INTO teacher VALUES ('CS01', 'Subrata Nandi', 'CSE', 'Professor');
 INSERT INTO teacher VALUES ('CS02', 'Bibhash Sen', 'CSE', 'Associate Professor');
@@ -99,7 +137,15 @@ UPDATE dept SET HOD = 'EE01' WHERE DeptCode = 'EE';
 
 ALTER TABLE dept ADD FOREIGN KEY (HOD) REFERENCES teacher(EmpCode); 
 
-CREATE TABLE dept_courses(DeptCode varchar(5), FOREIGN KEY (DeptCode) REFERENCES dept(DeptCode), Semester int, CourseID varchar(6), FOREIGN KEY (CourseID) REFERENCES courses(CourseID), Teacher varchar(5), FOREIGN KEY (Teacher) REFERENCES teacher(EmpCode));
+CREATE TABLE dept_courses(
+  DeptCode varchar(5), 
+  FOREIGN KEY (DeptCode) REFERENCES dept(DeptCode), 
+  Semester int, 
+  CourseID varchar(6), 
+  FOREIGN KEY (CourseID) REFERENCES courses(CourseID), 
+  Teacher varchar(5), 
+  FOREIGN KEY (Teacher) REFERENCES teacher(EmpCode)
+);
 
 INSERT INTO dept_courses VALUES ('CSE', 4, 'CSC401', 'CS02');
 INSERT INTO dept_courses VALUES ('CSE', 4, 'CSC402', 'CS03');
@@ -111,7 +157,14 @@ INSERT INTO dept_courses VALUES ('EE', 5, 'ECS501', 'EE01');
 INSERT INTO dept_courses VALUES ('EE', 5, 'ECS502', 'EE05');
 
 
-CREATE TABLE grades(RollNo varchar(8), CourseID varchar(6), PRIMARY KEY(RollNo, CourseID), Marks int, FOREIGN KEY (RollNo) REFERENCES student(RollNo), FOREIGN KEY (CourseID) REFERENCES courses(CourseID));
+CREATE TABLE grades(
+  RollNo varchar(8), 
+  CourseID varchar(6), 
+  PRIMARY KEY(RollNo, CourseID), 
+  Marks int, 
+  FOREIGN KEY (RollNo) REFERENCES student(RollNo), 
+  FOREIGN KEY (CourseID) REFERENCES courses(CourseID)
+);
 
 INSERT INTO grades VALUES ('20CS8001', 'CSC401', 70);
 INSERT INTO grades VALUES ('20CS8001', 'CSC402', 90);
