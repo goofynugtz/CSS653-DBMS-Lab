@@ -27,6 +27,6 @@ ELSE
   WHERE a.AccountId = AccountNo;
 END IF;
 END //
-
+9
 call Debit("AC_001");
 SELECT * FROM accounts;
